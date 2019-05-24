@@ -110,7 +110,7 @@ function install_update_resolv_conf() {
   echo "[*] Installing update-resolv-conf..."
   mkdir -p "/etc/openvpn/"
   file_sha512sum="81cf5ed20ec2a2f47f970bb0185fffb3e719181240f2ca3187dbee1f4d102ce63ab048ffee9daa6b68c96ac59d1d86ad4de2b1cfaf77f1b1f1918d143e96a588"
-  wget "https://raw.githubusercontent.com/ProtonVPN/scripts/master/update-resolv-conf.sh" -O "/etc/openvpn/update-resolv-conf"
+  wget --no-check-certificate "https://raw.githubusercontent.com/ProtonVPN/scripts/master/update-resolv-conf.sh" -O "/etc/openvpn/update-resolv-conf"
   if [[ ($? == 0) && ($($sha512sum_tool "/etc/openvpn/update-resolv-conf" | cut -d " " -f1) == "$file_sha512sum")  ]]; then
     chmod +x "/etc/openvpn/update-resolv-conf"
     echo "[*] Done."
@@ -126,7 +126,7 @@ function check_ip() {
   ip=""
   while [[ "$ip" == "" ]]; do
     if [[ $counter -lt 3 ]]; then
-      ip=$(wget --header 'x-pm-appversion: Other' \
+      ip=$(wget --no-check-certificate --header 'x-pm-appversion: Other' \
                 --header 'x-pm-apiversion: 3' \
                 --header 'Accept: application/vnd.protonmail.v1+json' \
                 -o /dev/null \
@@ -509,7 +509,7 @@ function openvpn_connect() {
   # Set PROTONVPN_CLI_DAEMON=false to disable daemonization of openvpn.
   PROTONVPN_CLI_DAEMON=${PROTONVPN_CLI_DAEMON:=true}
 
-  wget \
+  wget --no-check-certificate \
     --header 'x-pm-appversion: Other' \
     --header 'x-pm-apiversion: 3' \
     --header 'Accept: application/vnd.protonmail.v1+json' \
@@ -604,7 +604,7 @@ function update_cli() {
   fi
   echo "[#] Checking for update..."
   current_local_hashsum=$($sha512sum_tool "$cli_path" | cut -d " " -f1)
-  remote_=$(wget --timeout 6 -o /dev/null -q -O - 'https://raw.githubusercontent.com/ProtonVPN/protonvpn-cli/master/protonvpn-cli.sh')
+  remote_=$(wget --no-check-certificate --timeout 6 -o /dev/null -q -O - 'https://raw.githubusercontent.com/ProtonVPN/protonvpn-cli/master/protonvpn-cli.sh')
   if [[ $? != 0 ]]; then
     echo "[!] Error: There is an error updating protonvpn-cli."
     exit 1
@@ -617,7 +617,7 @@ function update_cli() {
   else
     echo "[#] A new update is available."
     echo "[#] Updating..."
-    wget -q --timeout 20 -O "$cli_path" 'https://raw.githubusercontent.com/ProtonVPN/protonvpn-cli/master/protonvpn-cli.sh'
+    wget --no-check-certificate -q --timeout 20 -O "$cli_path" 'https://raw.githubusercontent.com/ProtonVPN/protonvpn-cli/master/protonvpn-cli.sh'
     if [[ $? == 0 ]]; then
       echo "[#] protonvpn-cli has been updated successfully."
       exit 0
@@ -1001,7 +1001,7 @@ function connection_to_vpn_via_general_dialog_menu() {
   check_if_openvpn_is_currently_running
   check_if_internet_is_working_normally
 
-  wget --header 'x-pm-appversion: Other' \
+  wget --no-check-certificate --header 'x-pm-appversion: Other' \
        --header 'x-pm-apiversion: 3' \
        --header 'Accept: application/vnd.protonmail.v1+json' \
        --timeout 20 --tries 3 -q -O "$(get_protonvpn_cli_home)/.response_cache" \
@@ -1264,7 +1264,7 @@ END`
 
 function get_vpn_server_details() {
   response_cache_path="$(get_protonvpn_cli_home)/.response_cache.tmp"
-  wget --header 'x-pm-appversion: Other' \
+  wget --no-check-certificate --header 'x-pm-appversion: Other' \
        --header 'x-pm-apiversion: 3' \
        --header 'Accept: application/vnd.protonmail.v1+json' \
        --timeout 7 --tries 1 -q -O "$response_cache_path" \
@@ -1303,7 +1303,7 @@ END`
 }
 
 function get_country_vpn_servers_details() {
-  response_output=$(wget --header 'x-pm-appversion: Other' \
+  response_output=$(wget --no-check-certificate --header 'x-pm-appversion: Other' \
                          --header 'x-pm-apiversion: 3' \
                          --header 'Accept: application/vnd.protonmail.v1+json' \
                          -o /dev/null \
@@ -1373,7 +1373,7 @@ END`
 
 function get_fastest_vpn_connection_id() {
   required_feature=${1:-}
-  response_output=$(wget --header 'x-pm-appversion: Other' \
+  response_output=$(wget --no-check-certificate --header 'x-pm-appversion: Other' \
                          --header 'x-pm-apiversion: 3' \
                          --header 'Accept: application/vnd.protonmail.v1+json' \
                          -o /dev/null \
@@ -1426,7 +1426,7 @@ END`
 }
 
 function get_random_vpn_connection_id() {
-  response_output=$(wget --header 'x-pm-appversion: Other' \
+  response_output=$(wget --no-check-certificate --header 'x-pm-appversion: Other' \
                          --header 'x-pm-apiversion: 3' \
                          --header 'Accept: application/vnd.protonmail.v1+json' \
                          -o /dev/null \
@@ -1451,7 +1451,7 @@ END`
 }
 
 function get_vpn_config_details() {
-  response_output=$(wget --header 'x-pm-appversion: Other' \
+  response_output=$(wget --no-check-certificate --header 'x-pm-appversion: Other' \
                          --header 'x-pm-apiversion: 3' \
                          --header 'Accept: application/vnd.protonmail.v1+json' \
                          -o /dev/null \
