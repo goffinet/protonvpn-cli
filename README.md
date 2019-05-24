@@ -17,6 +17,11 @@ protonvpn-cli is a command-line tool for Linux and macOS.
 
 The program automatically checks for missing requirements.
 
+The script use wget binary without the --no-check-certificate option. You can use force this option on your system :
+
+```bash
+echo "check_certificate = off" >> ~/.wgetrc
+```
 
 # Installation #
 
